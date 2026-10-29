@@ -31,9 +31,13 @@ jobs:
       - name: Restore complete project tree
         run: |
           if [ -f staywise-source.tar.gz ]; then
-            tar -xzf staywise-source.tar.gz
-            rm -f staywise-source.tar.gz
-            rm -f .github/workflows/bootstrap.yml
+            mkdir -p /tmp/staywise-source
+            tar -xzf staywise-source.tar.gz -C /tmp/staywise-source
+            rm -rf /tmp/staywise-source/.git /tmp/staywise-source/.github
+            find /tmp/staywise-source -name '._*' -type f -delete
+            find /tmp/staywise-source -name '.DS_Store' -type f -delete
+            cp -R /tmp/staywise-source/. .
+            rm -rf /tmp/staywise-source staywise-source.tar.gz
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add -A
